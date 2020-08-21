@@ -1,9 +1,6 @@
 package th.go.rd.bankaccount.Controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import th.go.rd.bankaccount.Data.BankAccountRepository;
 import th.go.rd.bankaccount.Model.BankAccount;
 
@@ -27,5 +24,33 @@ public class BankAccountRestController {
     public BankAccount getOne(@PathVariable int id) {
         return repository.findById(id).get();
     }
+
+    @PostMapping
+    public BankAccount create(@RequestBody BankAccount bankAccount){
+        repository.save(bankAccount);
+        return repository.findById(bankAccount.getId()).get();
+    }
+
+    @PutMapping("/{id}")
+    public BankAccount update(@PathVariable int id,
+                              @RequestBody BankAccount bankAccount) {
+        BankAccount record = repository.findById(id).get();
+        record.setBalance(bankAccount.getBalance());
+        repository.save(record);
+        return record;
+    }
+
+    @GetMapping("/customer/{id}")
+    public List<BankAccount> getAllCustomerId(@PathVariable int id) {
+        return repository.findByCustomerId(id);
+    }
+
+    @DeleteMapping("/{id}")
+    public BankAccount delete(@PathVariable int id) {
+        BankAccount record = repository.findById(id).get();
+        repository.deleteById(id);
+        return record;
+    }
+
 
 }
